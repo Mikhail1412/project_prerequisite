@@ -8,7 +8,7 @@ public class Util {
     // set up a database connection
     private static final String URL  = "jdbc:mysql://localhost:3306/task_jdbc?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
     private static final String USER = "appuser";    // или root, если так подключаешься
-    private static final String PASS = "твой_пароль";
+    private static final String PASS = "21031998W";
 
 
     private Util() {}
