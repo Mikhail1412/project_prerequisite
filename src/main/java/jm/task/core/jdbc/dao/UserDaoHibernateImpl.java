@@ -14,18 +14,16 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public void createUsersTable() {
-        String sql = """
-            CREATE TABLE IF NOT EXISTS users(
-                id BIGINT NOT NULL AUTO_INCREMENT,
-                name VARCHAR(45) NOT NULL,
-                lastName VARCHAR(45) NOT NULL,
-                age TINYINT NOT NULL,
-                PRIMARY KEY (id)
-            )
-            """;
         try (Session s = HibernateUtil.getSessionFactory().openSession()) {
             Transaction tx = s.beginTransaction();
-            s.createNativeQuery(sql).executeUpdate();
+            s.createNativeQuery(
+                    "CREATE TABLE IF NOT EXISTS users (" +
+                            " id BIGINT NOT NULL AUTO_INCREMENT," +
+                            " name VARCHAR(45) NOT NULL," +
+                            " lastName VARCHAR(45) NOT NULL," +
+                            " age TINYINT NOT NULL," +
+                            " PRIMARY KEY (id))"
+            ).executeUpdate();
             tx.commit();
         } catch (Exception e) {
             throw new RuntimeException("createUsersTable failed", e);
@@ -36,7 +34,7 @@ public class UserDaoHibernateImpl implements UserDao {
     public void dropUsersTable() {
         try (Session s = HibernateUtil.getSessionFactory().openSession()) {
             Transaction tx = s.beginTransaction();
-            s.createNativeQuery("DROP TABLE IF EXISTS users").executeUpdate();
+            s.createNativeQuery("DROP TABLE IF EXISTS users").executeUpdate(); // IF EXISTS — важно
             tx.commit();
         } catch (Exception e) {
             throw new RuntimeException("dropUsersTable failed", e);
@@ -47,9 +45,8 @@ public class UserDaoHibernateImpl implements UserDao {
     public void saveUser(String name, String lastName, byte age) {
         try (Session s = HibernateUtil.getSessionFactory().openSession()) {
             Transaction tx = s.beginTransaction();
-            s.persist(new User(name, lastName, age));
+            s.persist(new User(name, lastName, age));  // id сгенерится сам
             tx.commit();
-            System.out.printf("Пользователь с именем – %s добавлен в базу данных%n", name);
         } catch (Exception e) {
             throw new RuntimeException("saveUser failed", e);
         }
@@ -59,12 +56,14 @@ public class UserDaoHibernateImpl implements UserDao {
     public void removeUserById(long id) {
         try (Session s = HibernateUtil.getSessionFactory().openSession()) {
             Transaction tx = s.beginTransaction();
-            User u = s.get(User.class, id);
-            if (u != null) s.remove(u);
+            s.createQuery("delete from User u where u.id = :id")
+                    .setParameter("id", id)
+                    .executeUpdate();
             tx.commit();
         } catch (Exception e) {
             throw new RuntimeException("removeUserById failed", e);
         }
+
     }
 
     @Override
