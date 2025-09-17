@@ -5,7 +5,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class Chicken3 {
-
     private final Pig4 pig4;
 
     @Autowired
@@ -18,4 +17,3 @@ public class Chicken3 {
         return "which is stuffed inside a pig, " + pig4.toString();
     }
 }
-

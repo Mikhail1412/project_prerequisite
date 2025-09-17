@@ -6,15 +6,14 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class TraditionalFeast {
-
     private Fish1 fish;
-
-    public String getTraditionalFeast() {
-        return "Traditional Bedouin Wedding Feast consists of stuffing " + fish.toString();
-    }
 
     @Autowired
     public void setFish(Fish1 fish) {
         this.fish = fish;
+    }
+
+    public String getTraditionalFeast() {
+        return "Traditional Bedouin Wedding Feast consists of stuffing " + fish.toString();
     }
 }

@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 public class AppConfig {
 
     @Bean
-    public static Duck2 getDuck(Chicken3 chicken) {
+    public Duck2 duck2(Chicken3 chicken) {
         return new Duck2(chicken);
     }
 }
